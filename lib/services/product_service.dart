@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:crud_flutter_api/models/product.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 //Criando a classe ProductService
@@ -24,6 +25,8 @@ void main() async {
   ProductService service = ProductService();
   final listProducts = await service.getAllProducts();
   for (var prod in listProducts) {
-    print('Titulo: ${prod.title} - Price: ${prod.price}');
+    if (kDebugMode) {
+      print('Titulo: ${prod.title} - Price: ${prod.price}');
+    }
   }
 }
