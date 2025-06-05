@@ -18,6 +18,21 @@ class ProductService {
       throw Exception('Erro aos buscar os produtos.');
     }
   }
+
+  //Método para adicionar produto
+  Future<Product> addProduct(Product product) async {
+    final response = await http.post(
+      Uri.parse(baseURL),
+      headers: {'Content-Type': 'tion/json'},
+      body: json.encode(product.toJson()),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return Product.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Erro ao criar o produto');
+    }
+  }
 }
 
 //Testando a API

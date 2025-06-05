@@ -31,4 +31,23 @@ class ProductController extends GetxController {
       isLoading(false);
     }
   }
+
+  Future<void> addProduct(Product p) async {
+    try {
+      final product = await _service.addProduct(
+        p,
+      ); //Chama o método salvar do service
+
+      if (product.id != null) {
+        products.add(product);
+      }
+
+      fetchProducts(); //Atualiza a lista após gravar o produto
+      Get.back(); // Voçta para a tela anterior
+    } catch (e) {
+      if (kDebugMode) {
+        print('Erro ao cadastrar o produto: $e');
+      }
+    }
+  }
 }
