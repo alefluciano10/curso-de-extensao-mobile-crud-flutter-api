@@ -1,6 +1,7 @@
 import 'package:crud_flutter_api/controllers/product_controller.dart';
 import 'package:crud_flutter_api/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class ProductFormPage extends StatefulWidget {
@@ -21,8 +22,12 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _controller = Get.find<ProductController>();
 
   //Método para salvar
-  void _save() {
+  Future<void> _save() async {
     if (_formKey.currentState!.validate()) {
+      await EasyLoading.show(
+        status: 'Cadastrando produto',
+        maskType: EasyLoadingMaskType.black,
+      );
       final product = Product(
         id: null,
         title: _title.text,
@@ -31,7 +36,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         category: _category.text,
         image: _image.text,
       );
-      _controller.addProduct(product);
+      await _controller.addProduct(product);
 
       // Limpa os campos
       _title.clear();
@@ -39,6 +44,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
       _description.clear();
       _category.clear();
       _image.clear();
+
+      await EasyLoading.dismiss();
 
       //Mostra uma mensagem ao cadastrar
       Get.snackbar(
@@ -67,7 +74,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         fontStyle: FontStyle.italic,
       ),
 
-      prefixIcon: Icon(icon, color: Colors.blueAccent),
+      prefixIcon: Icon(icon, color: Color(0xFF1565C0)),
       filled: true,
       fillColor: Colors.white,
       contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),

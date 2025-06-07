@@ -78,7 +78,7 @@ class ProductListPage extends StatelessWidget {
         onPressed: () {
           Get.to(() => const ProductFormPage());
         },
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Color(0xFF1565C0),
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
