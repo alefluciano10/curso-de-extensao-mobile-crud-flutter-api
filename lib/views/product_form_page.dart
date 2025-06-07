@@ -1,7 +1,6 @@
 import 'package:crud_flutter_api/controllers/product_controller.dart';
 import 'package:crud_flutter_api/models/product.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 class ProductFormPage extends StatefulWidget {
@@ -33,7 +32,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
         image: _image.text,
       );
       _controller.addProduct(product);
-      Get.back();
+
+      // Limpa os campos
+      _title.clear();
+      _price.clear();
+      _description.clear();
+      _category.clear();
+      _image.clear();
+
+      //Mostra uma mensagem ao cadastrar
       Get.snackbar(
         'Sucesso',
         'Produto cadastrado com sucesso!',
@@ -45,17 +52,44 @@ class _ProductFormPageState extends State<ProductFormPage> {
     }
   }
 
-  InputDecoration _inputDecoration(String hintText, IconData icon) {
+  InputDecoration _inputDecoration(String labelText, IconData icon) {
     return InputDecoration(
-      hintText: hintText,
-      prefixIcon: Icon(icon, color: Colors.indigo),
+      labelText: labelText,
+      labelStyle: const TextStyle(
+        color: Color(0xFF1A237E),
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+      ),
+      hintText: labelText,
+      hintStyle: const TextStyle(
+        color: Colors.black87,
+        fontSize: 14,
+        fontStyle: FontStyle.italic,
+      ),
+
+      prefixIcon: Icon(icon, color: Colors.blueAccent),
       filled: true,
       fillColor: Colors.white,
-      hintStyle: const TextStyle(fontSize: 14, color: Colors.black87),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(color: Colors.grey.shade400, width: 2),
+      ),
+
       focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.indigo, width: 2),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(color: Color(0xFF1A237E), width: 2),
+      ),
+
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(color: Colors.redAccent, width: 1.5),
+      ),
+
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderSide: BorderSide(color: Colors.redAccent, width: 2),
       ),
     );
   }
@@ -64,6 +98,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF1565C0),
         title: const Text(
           'Cadastrar Produto',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -141,8 +176,15 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
                       decoration: _inputDecoration('URL Imagem', Icons.image),
-                      validator:
-                          (i) => i!.isEmpty ? 'Informe a URL do produto' : null,
+                      validator: (i) {
+                        if (i == null || i.isEmpty) {
+                          return 'Informe a URL do produto';
+                        }
+                        final urlPattern =
+                            r'(http|https):\/\/(\w+:?\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?';
+                        final result = RegExp(urlPattern).hasMatch(i);
+                        return result ? null : 'Informe uma URL válida';
+                      },
                     ),
 
                     const SizedBox(height: 24),
@@ -150,7 +192,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: Colors.teal,
+                        backgroundColor: Color(0xFF1565C0),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         textStyle: const TextStyle(
                           fontSize: 16,

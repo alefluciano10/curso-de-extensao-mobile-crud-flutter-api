@@ -21,7 +21,7 @@ class ProductController extends GetxController {
   void fetchProducts() async {
     isLoading(true);
     try {
-      Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
       products.value = await _service.getAllProducts();
     } catch (e) {
       if (kDebugMode) {
@@ -41,9 +41,6 @@ class ProductController extends GetxController {
       if (product.id != null) {
         products.add(product);
       }
-
-      fetchProducts(); //Atualiza a lista após gravar o produto
-      Get.back(); // Voçta para a tela anterior
     } catch (e) {
       if (kDebugMode) {
         print('Erro ao cadastrar o produto: $e');
