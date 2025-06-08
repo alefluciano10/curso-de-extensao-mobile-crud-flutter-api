@@ -6,17 +6,21 @@ import 'package:get/get.dart';
 //Criando a classe ProductController
 class ProductController extends GetxController {
   final ProductService _service = ProductService();
+
   var products = <Product>[].obs;
+  var categories = <String>[].obs;
+  var isLoading = false.obs;
+
+  var searchQuery = ''.obs;
+  var selectedCategory = 'Todas as categorias'.obs;
 
   //Inicializando
   @override
   void onInit() {
     fetchProducts();
+    fetchCategories();
     super.onInit();
   }
-
-  //Loading
-  var isLoading = false.obs;
 
   void fetchProducts() async {
     isLoading(true);
@@ -30,6 +34,37 @@ class ProductController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+
+  void fetchCategories() async {
+    try {
+      final fetched = await _service.getCategories();
+      categories.assignAll(fetched);
+    } catch (e) {
+      Get.snackbar('Erro', 'Erro ao buscar categorias');
+    }
+  }
+
+  List<Product> get filteredProducts {
+    var temp =
+        selectedCategory.value == 'Todas as categorias'
+            ? products
+            : products
+                .where((p) => p.category == selectedCategory.value)
+                .toList();
+
+    if (searchQuery.value.isNotEmpty) {
+      temp =
+          temp
+              .where(
+                (p) => p.title.toLowerCase().contains(
+                  searchQuery.value.toLowerCase(),
+                ),
+              )
+              .toList();
+    }
+
+    return temp;
   }
 
   Future<void> addProduct(Product p) async {

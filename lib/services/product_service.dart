@@ -7,6 +7,18 @@ import 'package:http/http.dart' as http;
 class ProductService {
   final String baseURL = 'https://fakestoreapi.com/products';
 
+  //Método para buscar categoria
+  Future<List<String>> getCategories() async {
+    final response = await http.get(Uri.parse('$baseURL/categories'));
+
+    if (response.statusCode == 200) {
+      final List jsonList = json.decode(response.body);
+      return jsonList.cast<String>();
+    } else {
+      throw Exception('Erro ao buscar as categorias');
+    }
+  }
+
   //Método para buscar os produtos
   Future<List<Product>> getAllProducts() async {
     final response = await http.get(Uri.parse(baseURL));

@@ -21,7 +21,7 @@ class CustomDropdown extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,
-        labelStyle: const TextStyle(fontSize: 22),
+        labelStyle: const TextStyle(fontSize: 18, color: Color(0xFF1A237E)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -34,7 +34,7 @@ class CustomDropdown extends StatelessWidget {
         ),
       ),
       isExpanded: true,
-      icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF512DA8)),
+      icon: const Icon(Icons.arrow_drop_down, color: Color(0xFF1A237E)),
       dropdownColor: Colors.white,
       style: const TextStyle(color: Colors.black87, fontSize: 16),
       items:
