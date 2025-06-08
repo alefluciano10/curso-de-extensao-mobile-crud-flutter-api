@@ -1,5 +1,5 @@
 import 'package:crud_flutter_api/controllers/product_controller.dart';
-import 'package:crud_flutter_api/customAnimation/custom_animation.dart';
+import 'package:crud_flutter_api/custom/custom_animation.dart';
 import 'package:crud_flutter_api/views/product_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

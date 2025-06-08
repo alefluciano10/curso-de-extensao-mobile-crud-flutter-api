@@ -22,40 +22,54 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _controller = Get.find<ProductController>();
 
   //Método para salvar
+  //Método para salvar
   Future<void> _save() async {
     if (_formKey.currentState!.validate()) {
-      await EasyLoading.show(
-        status: 'Cadastrando produto',
-        maskType: EasyLoadingMaskType.black,
-      );
-      final product = Product(
-        id: null,
-        title: _title.text,
-        price: double.parse(_price.text),
-        description: _description.text,
-        category: _category.text,
-        image: _image.text,
-      );
-      await _controller.addProduct(product);
+      try {
+        await EasyLoading.show(
+          status: 'Cadastrando produto',
+          maskType: EasyLoadingMaskType.black,
+        );
+        final product = Product(
+          id: null,
+          title: _title.text,
+          price: double.parse(_price.text),
+          description: _description.text,
+          category: _category.text,
+          image: _image.text,
+        );
+        await _controller.addProduct(product);
 
-      // Limpa os campos
-      _title.clear();
-      _price.clear();
-      _description.clear();
-      _category.clear();
-      _image.clear();
+        // Limpa os campos
+        _title.clear();
+        _price.clear();
+        _description.clear();
+        _category.clear();
+        _image.clear();
 
-      await EasyLoading.dismiss();
+        await EasyLoading.dismiss();
 
-      //Mostra uma mensagem ao cadastrar
-      Get.snackbar(
-        'Sucesso',
-        'Produto cadastrado com sucesso!',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 3),
-      );
+        //Mostra uma mensagem ao cadastrar
+        Get.snackbar(
+          'Sucesso',
+          'Produto cadastrado com sucesso!',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 3),
+        );
+      } catch (e) {
+        Get.snackbar(
+          'Ops!',
+          'Erro do cadastrar o produto!',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 3),
+        );
+      } finally {
+        await EasyLoading.dismiss();
+      }
     }
   }
 
@@ -146,9 +160,16 @@ class _ProductFormPageState extends State<ProductFormPage> {
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       decoration: _inputDecoration('Preço', Icons.attach_money),
-                      validator:
-                          (p) =>
-                              p!.isEmpty ? 'Informe o preço do produto' : null,
+                      validator: (p) {
+                        if (p == null || p.isEmpty) {
+                          return 'Informe o preço do produto';
+                        }
+                        final value = double.tryParse(p);
+                        if (value == null || value <= 0) {
+                          return 'Informe um preço válido';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16),
                     TextFormField(
